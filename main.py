@@ -14,11 +14,11 @@ def main():
 
 @main.command()
 @click.argument('init', nargs=-1)
-@click.option('--year', '-y')
-@click.option('--day', '-d')
+@click.option('--year', '-y', required=True)
+@click.option('--day', '-d', required=True)
 def init(init, year, day):
     """Initilise day of Advent of Code"""
-    click.echo(year+day)
+##    click.echo(year+day)
     if not os.path.exists(".advent-of-code-cli"):
         manifest_data = {
             "year": year,
@@ -26,8 +26,13 @@ def init(init, year, day):
             }
         with open(".advent-of-code-cli","w+") as _advent_of_code_cli:
             _advent_of_code_cli.write(json.dumps(manifest_data))
-    if not os.path.exists("solution.py"):
-        
+    script_dir = os.path.dirname(__file__)
+    rel_path = "content/solution.py"
+    abs_file_path = os.path.join(script_dir, rel_path)
+    click.echo(abs_file_path)
+##    if not os.path.exists("solution.py"):
+##        with open("content/solution.py","rb") as original:
+##            with open("
 
 @main.command()
 @click.argument('refetch', nargs=-1)
