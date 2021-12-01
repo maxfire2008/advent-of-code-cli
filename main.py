@@ -15,6 +15,8 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
+os.environ['REQUESTS_CA_BUNDLE'] = resource_path("content/cacert.pem")
+
 @click.group()
 def main():
     """
