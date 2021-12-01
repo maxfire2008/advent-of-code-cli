@@ -4,6 +4,16 @@ import subprocess
 import os
 import base64
 import json
+import sys
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 @click.group()
 def main():
@@ -26,19 +36,54 @@ def init(init, year, day):
             }
         with open(".advent-of-code-cli","w+") as _advent_of_code_cli:
             _advent_of_code_cli.write(json.dumps(manifest_data))
-    script_dir = os.path.dirname(__file__)
-    rel_path = "content/solution.py"
-    abs_file_path = os.path.join(script_dir, rel_path)
-    click.echo(abs_file_path)
-##    if not os.path.exists("solution.py"):
-##        with open("content/solution.py","rb") as original:
-##            with open("
+        click.echo(".advent-of-code-cli created")
+##    click.echo(resource_path("content/solution.py"))
+    if not os.path.exists("solution.py"):
+        with open(resource_path("content\\solution.py"),"rb") as original:
+            with open("solution.py","wb+") as new:
+                new.write(original.read())
+        click.echo("solution.py created")
+    if not os.path.exists("problem_io.py"):
+        with open(resource_path("content\\problem_io.py"),"rb") as original:
+            with open("problem_io.py","wb+") as new:
+                new.write(original.read())
+        click.echo("problem_io.py created")
+    if not os.path.exists("sample.txt"):
+        with open("sample.txt","wb+") as new:
+            pass
+        click.echo("sample.txt created")
+    with open(".advent-of-code-cli","rb") as config_file_stream:
+        config_file = json.loads(config_file_stream.read().decode())
+    session_cookie = click.prompt("Session Cookie")
+    resp = requests.get("https://adventofcode.com/"+config_file["year"]+"/day/"+config_file["day"]+"/input", headers={"cookie": "session="+session_cookie})
+    if resp.status_code == 200:
+        with open("input.txt","wb+") as new:
+            new.write(resp.content)
+        click.echo("input.txt downloaded")
+##            click.echo(resp.content.decode())
+    else:
+        click.echo(resp.status_code)
+        click.echo(resp.content.decode())
 
 @main.command()
 @click.argument('refetch', nargs=-1)
 def refetch(refetch):
     """Refetch input."""
-    click.echo("abc")
+    if os.path.exists(".advent-of-code-cli"):
+        with open(".advent-of-code-cli","rb") as config_file_stream:
+            config_file = json.loads(config_file_stream.read().decode())
+        session_cookie = click.prompt("Session Cookie")
+        resp = requests.get("https://adventofcode.com/"+config_file["year"]+"/day/"+config_file["day"]+"/input", headers={"cookie": "session="+session_cookie})
+        if resp.status_code == 200:
+            with open("input.txt","wb+") as new:
+                new.write(resp.content)
+            click.echo("input.txt downloaded")
+##            click.echo(resp.content.decode())
+        else:
+            click.echo(resp.status_code)
+            click.echo(resp.content.decode())
+    else:
+        click.echo("Please initilise this folder first!")
 
 @main.command()
 @click.argument('run', nargs=-1)
