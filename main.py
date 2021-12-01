@@ -3,6 +3,7 @@ import click
 import subprocess
 import os
 import base64
+import json
 
 @click.group()
 def main():
@@ -18,12 +19,20 @@ def main():
 def init(init, year, day):
     """Initilise day of Advent of Code"""
     click.echo(year+day)
+    if not os.path.exists(".advent-of-code-cli"):
+        manifest_data = {
+            "year": year,
+            "day": day
+            }
+        with open(".advent-of-code-cli","w+") as _advent_of_code_cli:
+            _advent_of_code_cli.write(json.dumps(manifest_data))
+    if not os.path.exists("solution.py"):
+        
 
 @main.command()
 @click.argument('refetch', nargs=-1)
 def refetch(refetch):
     """Refetch input."""
-    
     click.echo("abc")
 
 @main.command()
