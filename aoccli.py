@@ -96,7 +96,7 @@ def refetch(refetch,session_cookie):
 @click.option('--sample', '-s', is_flag=True)
 ##@click.option('--language', '-l', default="py {path} {b64filename}", show_default=True, help="Avalible options:\n{path}: path of file\n{b64filename}: base64 encoded name of file")
 ##@click.option('--language_custom', '-c', default="py {path} {b64filename}", show_default=True, help="Avalible options:\n{path}: path of file\n{b64filename}: base64 encoded name of file")
-def run(run, verbose, sample, language_custom):
+def run(run, verbose, sample):
     """Run program"""
     if sample:
         input_file = "sample.txt"
