@@ -42,12 +42,12 @@ def init(init, year, day, session_cookie):
         click.echo(".advent-of-code-cli created")
 ##    click.echo(resource_path("content/solution.py"))
     if not os.path.exists("solution.py"):
-        with open(resource_path("content\\solution.py"),"rb") as original:
+        with open(resource_path("content/solution.py"),"rb") as original:
             with open("solution.py","wb+") as new:
                 new.write(original.read())
         click.echo("solution.py created")
     if not os.path.exists("problem_io.py"):
-        with open(resource_path("content\\problem_io.py"),"rb") as original:
+        with open(resource_path("content/problem_io.py"),"rb") as original:
             with open("problem_io.py","wb+") as new:
                 new.write(original.read())
         click.echo("problem_io.py created")
