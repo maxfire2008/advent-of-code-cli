@@ -20,7 +20,7 @@ os.environ['REQUESTS_CA_BUNDLE'] = resource_path("content/cacert.pem")
 @click.group()
 def main():
     """
-    Simple CLI for Advent of Code
+    Simple CLI for Advent of Code v1.0.0
     """
     pass
 
