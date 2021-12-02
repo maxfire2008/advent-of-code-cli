@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(['main.py'],
+a = Analysis(['aoccli.py'],
              pathex=[],
              binaries=[],
              datas=[('content', 'content')],
@@ -26,7 +26,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,  
           [],
-          name='main',
+          name='aoccli',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
