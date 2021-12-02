@@ -126,6 +126,7 @@ def run(run, verbose, sample):
                 ),
                 base64.b64encode(input_file.encode()).decode()
             ],
+            )
     except FileNotFoundError:
         result = subprocess.run(
             [
@@ -135,6 +136,7 @@ def run(run, verbose, sample):
                 ),
                 base64.b64encode(input_file.encode()).decode()
             ],
+            )
 ##        language_custom.replace(
 ##            "{path}",
 ##            os.path.join("solution.py"),
@@ -145,7 +147,6 @@ def run(run, verbose, sample):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
 ##        cwd=problem_file_path
-    )
     try:
         code_output = result.stdout.decode()
     except:
