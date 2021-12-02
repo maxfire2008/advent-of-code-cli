@@ -117,14 +117,24 @@ def run(run, verbose, sample):
         else:
             click.echo("Couldn't find input.txt. Try initilising this folder.")
             return
-    result = subprocess.run(
-        [
-            'py',
-            os.path.join(
-                "solution.py"
-            ),
-            base64.b64encode(input_file.encode()).decode()
-        ],
+    try:
+        result = subprocess.run(
+            [
+                'py',
+                os.path.join(
+                    "solution.py"
+                ),
+                base64.b64encode(input_file.encode()).decode()
+            ],
+    except FileNotFoundError:
+        result = subprocess.run(
+            [
+                'python3',
+                os.path.join(
+                    "solution.py"
+                ),
+                base64.b64encode(input_file.encode()).decode()
+            ],
 ##        language_custom.replace(
 ##            "{path}",
 ##            os.path.join("solution.py"),
