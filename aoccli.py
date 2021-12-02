@@ -11,8 +11,8 @@ def resource_path(relative_path):
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+    except Exception as e:
+        base_path = os.path.dirname(os.path.realpath(__file__))
     return os.path.join(base_path, relative_path)
 
 os.environ['REQUESTS_CA_BUNDLE'] = resource_path("content/cacert.pem")
@@ -28,7 +28,8 @@ def main():
 @click.argument('init', nargs=-1)
 @click.option('--year', '-y', required=True)
 @click.option('--day', '-d', required=True)
-def init(init, year, day):
+@click.option('--session_cookie', '-s')
+def init(init, year, day, session_cookie):
     """Initilise day of Advent of Code"""
 ##    click.echo(year+day)
     if not os.path.exists(".advent-of-code-cli"):
@@ -56,25 +57,27 @@ def init(init, year, day):
         click.echo("sample.txt created")
     with open(".advent-of-code-cli","rb") as config_file_stream:
         config_file = json.loads(config_file_stream.read().decode())
-    session_cookie = click.prompt("Session Cookie")
-    resp = requests.get("https://adventofcode.com/"+config_file["year"]+"/day/"+config_file["day"]+"/input", headers={"cookie": "session="+session_cookie})
-    if resp.status_code == 200:
-        with open("input.txt","wb+") as new:
-            new.write(resp.content)
-        click.echo("input.txt downloaded")
-##            click.echo(resp.content.decode())
+    if session_cookie:
+        resp = requests.get("https://adventofcode.com/"+config_file["year"]+"/day/"+config_file["day"]+"/input", headers={"cookie": "session="+session_cookie})
+        if resp.status_code == 200:
+            with open("input.txt","wb+") as new:
+                new.write(resp.content)
+            click.echo("input.txt downloaded")
+        else:
+            click.echo(resp.status_code)
+            click.echo(resp.content.decode())
     else:
-        click.echo(resp.status_code)
-        click.echo(resp.content.decode())
+        click.echo("Input not collected as session cookie was not provided. Use aoccli refetch to get the input.")
 
 @main.command()
 @click.argument('refetch', nargs=-1)
-def refetch(refetch):
+@click.option('--session_cookie', '-s', required=True)
+def refetch(refetch,session_cookie):
     """Refetch input."""
     if os.path.exists(".advent-of-code-cli"):
         with open(".advent-of-code-cli","rb") as config_file_stream:
             config_file = json.loads(config_file_stream.read().decode())
-        session_cookie = click.prompt("Session Cookie")
+##        session_cookie = click.prompt("Session Cookie")
         resp = requests.get("https://adventofcode.com/"+config_file["year"]+"/day/"+config_file["day"]+"/input", headers={"cookie": "session="+session_cookie})
         if resp.status_code == 200:
             with open("input.txt","wb+") as new:
@@ -91,7 +94,9 @@ def refetch(refetch):
 @click.argument('run', nargs=-1)
 @click.option('--verbose', '-v', is_flag=True)
 @click.option('--sample', '-s', is_flag=True)
-def run(run, verbose, sample):
+##@click.option('--language', '-l', default="py {path} {b64filename}", show_default=True, help="Avalible options:\n{path}: path of file\n{b64filename}: base64 encoded name of file")
+##@click.option('--language_custom', '-c', default="py {path} {b64filename}", show_default=True, help="Avalible options:\n{path}: path of file\n{b64filename}: base64 encoded name of file")
+def run(run, verbose, sample, language_custom):
     """Run program"""
     if sample:
         input_file = "sample.txt"
@@ -120,6 +125,13 @@ def run(run, verbose, sample):
             ),
             base64.b64encode(input_file.encode()).decode()
         ],
+##        language_custom.replace(
+##            "{path}",
+##            os.path.join("solution.py"),
+##            ).replace(
+##            "{b64filename}",
+##            base64.b64encode(input_file.encode()).decode(),
+##            ),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
 ##        cwd=problem_file_path
