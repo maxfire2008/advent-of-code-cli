@@ -20,7 +20,7 @@ os.environ['REQUESTS_CA_BUNDLE'] = resource_path("content/cacert.pem")
 @click.group()
 def main():
     """
-    Simple CLI for Advent of Code v1.0.0
+    Simple CLI for Advent of Code v1.1.0
     """
     pass
 
@@ -180,7 +180,7 @@ def run(run, verbose, sample):
     if code_answer_part_2:
         click.echo("==PART 2 ANSWER==")
         click.echo(code_answer_part_2)
-    if not (code_answer or code_answer_part_2):
+    if not (code_answer or code_answer_part_2) and not verbose:
         click.echo("Code produced no valid output calls! Try with --verbose")
 
 if __name__ == "__main__":
