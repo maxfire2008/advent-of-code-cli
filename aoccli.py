@@ -148,6 +148,7 @@ def run(run, verbose, sample):
 ##            "{b64filename}",
 ##            base64.b64encode(input_file.encode()).decode(),
 ##            ),
+##            ),
 ##        cwd=problem_file_path
     try:
         code_output = result.stdout.decode()
@@ -158,31 +159,22 @@ def run(run, verbose, sample):
     except:
         pass
 
-    code_answer = None
+    code_answers = {}
     for line in code_output.split("\n"):
-        if line.startswith("__AOC_CI_SYSTEM_OUTPUT_CALL:"):
+        if line.startswith("__AOC_CLI_SYSTEM_OUTPUT_CALL:"):
             try:
-                code_answer = base64.b64decode(line[28:].encode()).decode()
+                code_answer = json.loads(base64.b64decode(line[28:].encode()).decode())
+                code_answers[code_answer["part"]] = code_answer["output"]
             except Exception as e:
-##                print(e)
-                code_answer = None
-    code_answer_part_2 = None
-    for line in code_output.split("\n"):
-        if line.startswith("__AOC_CI_SYSTEM_OUTPUT_CALL_2:"):
-            try:
-                code_answer_part_2 = base64.b64decode(line[30:].encode()).decode()
-            except Exception as e:
-##                print(e)
-                code_answer_part_2 = None
+                pass
     if verbose:
         click.echo(code_output)
-    if code_answer:
-        click.echo("==PART 1 ANSWER==")
-        click.echo(code_answer)
-    if code_answer_part_2:
-        click.echo("==PART 2 ANSWER==")
-        click.echo(code_answer_part_2)
-    if not (code_answer or code_answer_part_2) and not verbose:
+    at_least_one = False
+    for ans in code_answers:
+        at_least_one = True
+        click.echo("==PART "+str(ans)+" ANSWER==")
+        click.echo(code_answers[ans])
+    if not at_least_one and not verbose:
         click.echo("Code produced no valid output calls! Try with --verbose")
 
 if __name__ == "__main__":
