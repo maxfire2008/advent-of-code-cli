@@ -19,9 +19,5 @@ class IO:
                 self._input=file_content
             return self._input
     def output(self,output,part=1):
-        if "2" in str(part):
-            print('__AOC_CI_SYSTEM_OUTPUT_CALL_2:'+base64.b64encode(str(output).encode()).decode())
-        else:
-            print('__AOC_CI_SYSTEM_OUTPUT_CALL:'+base64.b64encode(str(output).encode()).decode())
         print('__AOC_CLI_SYSTEM_OUTPUT_CALL:'+base64.b64encode(json.dumps({"output":str(output).encode(), "part": part})).decode())
 io = IO()
