@@ -126,6 +126,8 @@ def run(run, verbose, sample):
                 ),
                 base64.b64encode(input_file.encode()).decode()
             ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             )
     except FileNotFoundError:
         result = subprocess.run(
@@ -136,6 +138,8 @@ def run(run, verbose, sample):
                 ),
                 base64.b64encode(input_file.encode()).decode()
             ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             )
 ##        language_custom.replace(
 ##            "{path}",
@@ -144,8 +148,6 @@ def run(run, verbose, sample):
 ##            "{b64filename}",
 ##            base64.b64encode(input_file.encode()).decode(),
 ##            ),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
 ##        cwd=problem_file_path
     try:
         code_output = result.stdout.decode()
