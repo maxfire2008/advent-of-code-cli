@@ -20,7 +20,7 @@ os.environ['REQUESTS_CA_BUNDLE'] = resource_path("content/cacert.pem")
 @click.group()
 def main():
     """
-    Simple CLI for Advent of Code v2.0.0
+    Simple CLI for Advent of Code v2.0.1
     """
     pass
 
@@ -52,7 +52,7 @@ def init(init, year, day, session_cookie):
                 new.write(original.read())
         click.echo("problem_io.py created")
     if not os.path.exists("sample.txt"):
-        with open("sample.txt","wb+") as new:
+        with open("sample.txt","w+") as new:
             pass
         click.echo("sample.txt created")
     with open(".advent-of-code-cli","rb") as config_file_stream:
