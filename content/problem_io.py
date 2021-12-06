@@ -12,7 +12,7 @@ class IO:
         else:
             file_name = base64.b64decode(sys.argv[1].encode()).decode()
             with open(file_name,"rb") as file:
-                file_content = file.read().decode()
+                file_content = file.read().decode().replace("\r\n","\n")
             if file_content.endswith("\n"):
                 self._input=file_content[:-1]
             else:
