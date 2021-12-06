@@ -1,6 +1,7 @@
 from problem_io import io
 
-#Do stuff here
+#Get input
+io.input
 
 #Return part 1
 io.output(500,1)
