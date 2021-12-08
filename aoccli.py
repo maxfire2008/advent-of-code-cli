@@ -20,7 +20,7 @@ os.environ['REQUESTS_CA_BUNDLE'] = resource_path("content/cacert.pem")
 @click.group()
 def main():
     """
-    Simple CLI for Advent of Code v2.0.1
+    Simple CLI for Advent of Code v2.1.0
     """
     pass
 
@@ -94,9 +94,10 @@ def refetch(refetch,session_cookie):
 @click.argument('run', nargs=-1)
 @click.option('--verbose', '-v', is_flag=True)
 @click.option('--sample', '-s', is_flag=True)
+@click.option('--noexec', '-n', is_flag=True)
 ##@click.option('--language', '-l', default="py {path} {b64filename}", show_default=True, help="Avalible options:\n{path}: path of file\n{b64filename}: base64 encoded name of file")
 ##@click.option('--language_custom', '-c', default="py {path} {b64filename}", show_default=True, help="Avalible options:\n{path}: path of file\n{b64filename}: base64 encoded name of file")
-def run(run, verbose, sample):
+def run(run, verbose, sample, noexec):
     """Run program"""
     if sample:
         input_file = "sample.txt"
@@ -117,6 +118,10 @@ def run(run, verbose, sample):
         else:
             click.echo("Couldn't find input.txt. Try initilising this folder.")
             return
+    if verbose or noexec:
+        click.echo("Running command:",'py',os.path.join("solution.py"),base64.b64encode(input_file.encode()).decode())
+    if noexec:
+        return
     try:
         result = subprocess.run(
             [
