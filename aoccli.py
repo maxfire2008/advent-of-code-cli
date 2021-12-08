@@ -119,7 +119,7 @@ def run(run, verbose, sample, noexec):
             click.echo("Couldn't find input.txt. Try initilising this folder.")
             return
     if verbose or noexec:
-        click.echo("Running command:"+'py'+str(os.path.join("solution.py"))+base64.b64encode(input_file.encode()).decode())
+        click.echo("Running command: "+'py '+str(os.path.join("solution.py"))+" "+base64.b64encode(input_file.encode()).decode())
     if noexec:
         return
     try:
