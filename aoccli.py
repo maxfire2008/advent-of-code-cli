@@ -20,7 +20,7 @@ os.environ['REQUESTS_CA_BUNDLE'] = resource_path("content/cacert.pem")
 @click.group()
 def main():
     """
-    Simple CLI for Advent of Code v2.1.0
+    Simple CLI for Advent of Code v3.0.0
     """
     pass
 
@@ -118,8 +118,12 @@ def run(run, verbose, sample, noexec):
         else:
             click.echo("Couldn't find input.txt. Try initilising this folder.")
             return
+    solution_input = json.dumps({
+        "f": input_file,
+        "n": noexec
+        })
     if verbose or noexec:
-        click.echo("Run command: "+'py '+str(os.path.join("solution.py"))+" "+base64.b64encode(input_file.encode()).decode())
+        click.echo("Run command: "+'py '+str(os.path.join("solution.py"))+" "+base64.b64encode(solution_input.encode()).decode())
     if noexec:
         return
     try:
@@ -129,7 +133,7 @@ def run(run, verbose, sample, noexec):
                 os.path.join(
                     "solution.py"
                 ),
-                base64.b64encode(input_file.encode()).decode()
+                base64.b64encode(solution_input.encode()).decode()
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -141,7 +145,7 @@ def run(run, verbose, sample, noexec):
                 os.path.join(
                     "solution.py"
                 ),
-                base64.b64encode(input_file.encode()).decode()
+                base64.b64encode(solution_input.encode()).decode()
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -177,8 +181,9 @@ def run(run, verbose, sample, noexec):
     at_least_one = False
     for ans in code_answers:
         at_least_one = True
-        click.echo("==PART "+str(ans)+" ANSWER==")
+        click.echo("==== PART "+str(ans)+" ANSWER ====")
         click.echo(code_answers[ans])
+        click.echo("="*(22+len(str(ans))))
     if not at_least_one and not verbose:
         click.echo("Code produced no valid output calls! Try with --verbose")
 
